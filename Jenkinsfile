@@ -10,6 +10,7 @@ podTemplate(label: 'mypod', containers: [
   ) {
     node('mypod') {
         def commitId
+        def imageRepository = 'ray99chen/helloworld'
         /*
         stage ('Git') {
             //checkout scm
@@ -63,21 +64,25 @@ podTemplate(label: 'mypod', containers: [
                 docker.withRegistry('', 'dockerHubCredential') {
                     // def customImage = docker.build("my-image:${env.BUILD_ID}")
                     dir('helloworld/') {
-                        def customImage = docker.build("ray99chen/helloworld:${commitId}")
+                        def customImage = docker.build("${imageRepository}:${commitId}")
                         /* Push the container to the custom Registry */
                         customImage.push()
                     }
                 }  
             }
         }
-        /*
+    
         stage ('Deploy') {
-            //sh 'git clone -b master https://github.com/ray99chen/helloworld.git'
             container ('helm') {
-                sh "/helm init --client-only --skip-refresh"
-                sh "/helm upgrade --install --wait --set image.repository=${repository},image.tag=${commitId} hello hello"
+                dir('helloworld/') {
+                    sh 'echo in helm container'
+                    sh 'pwd'
+                    sh 'ls -ltr'
+                    sh "/helm init --client-only --skip-refresh"
+                    sh "/helm upgrade --install --wait --set image.repository=${imageRepository} --set image.tag=${commitId} -f ./helm/values.yaml helloworld ./helm"
+                }
             }
         }        
-        */
+    
     }
 }
