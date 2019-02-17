@@ -11,28 +11,14 @@ podTemplate(label: 'mypod', containers: [
     node('mypod') {
         def commitId
         def imageRepository = 'ray99chen/helloworld'
-        /*
-        stage ('Git') {
-            //checkout scm
-            sh 'whoami'
-            sh 'hostname -i'
-            sh 'git clone -b master https://github.com/ray99chen/helloworld.git'
-            commitId = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
-        }
-        */
     
         stage('Clone repository') {
             container('git') {
-                sh 'whoami'
-                sh 'hostname -i'
                 sh 'git clone https://github.com/ray99chen/helloworld.git'
-                sh 'echo a.'
                 sh 'pwd'
                 sh 'ls -ltr'
                 dir('helloworld/') {
                     commitId = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
-                    sh 'echo b.'
-                    sh 'ls -ltr'
                 }
                 sh "echo commitI=${commitId}"
             }
@@ -47,17 +33,7 @@ podTemplate(label: 'mypod', containers: [
                 }
             }
         }
-        /*
-        def repository
-        stage ('Docker') {
-            container ('docker') {
-                def registryIp = sh(script: 'getent hosts registry.kube-system | awk \'{ print $1 ; exit }\'', returnStdout: true).trim()
-                repository = "${registryIp}:80/hello"
-                sh "docker build -t ${repository}:${commitId} ."
-                sh "docker push ${repository}:${commitId}"
-            }
-        }   
-        */
+
         /* setup the credential-id with a username of password of the registry */
         stage ('Docker') {
             container ('docker') {
@@ -67,6 +43,7 @@ podTemplate(label: 'mypod', containers: [
                         def customImage = docker.build("${imageRepository}:${commitId}")
                         /* Push the container to the custom Registry */
                         customImage.push()
+                        customImage.push('latest')
                     }
                 }  
             }
@@ -86,3 +63,4 @@ podTemplate(label: 'mypod', containers: [
     
     }
 }
+
