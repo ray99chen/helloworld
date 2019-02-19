@@ -1,4 +1,16 @@
 ---
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Chart.Name }}-service
+spec:
+  selector:
+    app: {{ .Chart.Name }}
+  ports:
+  - port: 8080
+    targetPort: 8080
+  type: NodePort
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -20,16 +32,4 @@ spec:
         image: "{{ template "helloworld.image" . }}"
         ports:
         - containerPort: 8080
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: {{ .Chart.Name }}-service
-spec:
-  selector:
-    app: {{ .Chart.Name }}
-  ports:
-  - port: 8080
-    targetPort: 8080
-  type: NodePort
 ---
