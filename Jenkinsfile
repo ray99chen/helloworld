@@ -8,9 +8,14 @@ podTemplate(label: 'mypod', containers: [
     hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
   ]
   ) {
+    properties([parameters([choice(choices: ['Deploy latest to env', 'Cut release and deploy to env', 'Select version and deploy to env'], description: '', name: 'Deployment Type')])])
     node('mypod') {
         def commitId
         def imageRepository = 'ray99chen/helloworld'
+        
+        stage('Build choice') {
+            sh "echo buil type: ${params.deploymentType}"
+        }
     
         stage('Clone repository') {
             container('git') {

@@ -6,6 +6,7 @@ metadata:
 spec:
   selector:
     app: {{ .Chart.Name }}
+    track: {{ .Values.track | default "blue" | quote}}
   ports:
   - port: 8080
     targetPort: 8080
@@ -17,11 +18,13 @@ metadata:
   name: {{ .Chart.Name }}-deployment
   labels:
     app: {{ .Chart.Name }}
+    track: {{ .Values.track | default "blue" | quote}}
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: {{ .Chart.Name }}
+      track: {{ .Values.track }}
   template:
     metadata:
       labels:

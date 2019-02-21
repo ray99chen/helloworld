@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class Controller {
     @GetMapping("/hello")
     public String handle() {
-        return "Hello WebFlux 2";
+        return "Hello WebFlux Blue";
     }
 }
