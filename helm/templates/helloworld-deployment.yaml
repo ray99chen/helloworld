@@ -35,9 +35,9 @@ spec:
         # image: "{{ template "helloworld.image" . }}"
         image: ray99chen/helloworld:v2
         imagePullPolicy: Always
-        env:
-        - name: SPRING_PROFILE
-          value: qa
+        envFrom:
+        - configMapRef:
+            name: helloworld-config
         ports:
         - containerPort: 8080
 ---
