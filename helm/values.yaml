@@ -1,5 +1,5 @@
 image:
   registry: docker.io
   repository: ray99chen/helloworld
-  tag: v1
+  tag: latest
   pullPolicy: Always

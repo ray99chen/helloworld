@@ -1,0 +1,1 @@
+on the Jenkins invoke kubectl create configmap helloworld-config --from-env-file=configs/{{env}}/{{env-file-name}}
